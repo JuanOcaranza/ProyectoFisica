@@ -1,4 +1,5 @@
 import pandas as pd
+from datetime import datetime
 
 class Data:
     def __init__(self, df, objects):
@@ -17,5 +18,7 @@ class Data:
             self.df[f"ax_{object}"] = self.df[f"vx_{object}"].diff()
             self.df[f"ay_{object}"] = self.df[f"vy_{object}"].diff()
 
-    def get_data(self):
+    def get_data(self, save = False):
+        if save:
+            self.df.to_csv(f"csv/data{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv", index = False)
         return self.df
