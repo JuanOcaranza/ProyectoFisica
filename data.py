@@ -1,17 +1,11 @@
 import pandas as pd
 
 class Data:
-    def __init__(self, objects, cartesian_positions):
-        self.df = pd.DataFrame(cartesian_positions, columns = objects)
+    def __init__(self, df, objects):
+        self.df = df
         self.objects = objects
-        for object in objects:
-            self._split_positions(object)
         self._add_velocity()
         self._add_acceleration()
-
-    def _split_positions(self, object):
-        self.df[[f"rx_{object}", f"ry_{object}"]] = self.df[object].apply(pd.Series)
-        self.df.drop(columns = [object], inplace=True)
 
     def _add_velocity(self):
         for object in self.objects:
