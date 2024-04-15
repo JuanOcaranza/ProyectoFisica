@@ -18,11 +18,11 @@ for frame in video.getFrames():
     if len(keypoints) > 0:
         positions.append(keypoints)
 
-video.close()
-
 objects = ["shoulder", "elbow", "wrist"]
 adapter = Adapter(positions, objects, video.get_height())
 data = Data(adapter.get_adapted_data(), objects)
 plotter = Plotter(data.get_data())
 
 plotter.show_plot()
+
+video.close()

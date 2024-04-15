@@ -20,8 +20,7 @@ class Video:
         return self.frames
 
     def get_height(self):
-        # I don't undersand why, but cv.CAP_PROP_FRAME_HEIGHT is not working (always returns 0)
-        return self.getFrames()[0].shape[0]
+        return self.cap.get(cv.CAP_PROP_FRAME_HEIGHT)
 
     def close(self):
         self.cap.release()
