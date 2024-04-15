@@ -2,6 +2,7 @@ from ultralytics import YOLO
 import numpy as np
 import cv2 as cv
 from video import Video
+import torch
 
 """
 Single object tracker, able to detect people keypoints and track them.
@@ -33,7 +34,8 @@ class Tracker:
         """
         self.keypoints_indexes = keypoints_indexes
         self.model = YOLO(model_path)
-        self.model.to('cuda')
+        if torch.cuda.is_available():
+            self.model.to('cuda')
 
     def _track(self, frame):
         """
@@ -70,7 +72,7 @@ class Tracker:
     
 if __name__ == "__main__":
     tracker = Tracker([6, 8, 10])
-    video = Video("bicep.mkv")
+    video = Video("videos/video0.mkv")
 
     for frame in video.getFrames():
         result = tracker._track(frame)
