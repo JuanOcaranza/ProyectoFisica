@@ -1,25 +1,30 @@
 import pandas as pd
 from datetime import datetime
 import numpy as np
+from filter import Filter
 
 class Data:
     def __init__(self, df, objects):
         self.df = df
         self.objects = objects
+        self.filter = Filter()
         self._add_velocity()
         self._add_acceleration()
         self.add_polar_wrist()
         self.add_angular_velocity()
 
     def _add_velocity(self):
+        self.df = self.filter.apply_filter(self.df.columns, self.df)
         for object in self.objects:
             self.df[f"vx_{object}"] = self.df[f"rx_{object}"].diff()
             self.df[f"vy_{object}"] = self.df[f"ry_{object}"].diff()
     
     def _add_acceleration(self):
+        self.df = self.filter.apply_filter([column for column in self.df.columns if 'v' in column], self.df)
         for object in self.objects:
             self.df[f"ax_{object}"] = self.df[f"vx_{object}"].diff()
             self.df[f"ay_{object}"] = self.df[f"vy_{object}"].diff()
+        self.df = self.filter.apply_filter([column for column in self.df.columns if 'a' in column], self.df)
     
     def add_polar_wrist(self):
         x_vector_elbow_to_wrist = self.df['rx_wrist'] - self.df['rx_elbow']
