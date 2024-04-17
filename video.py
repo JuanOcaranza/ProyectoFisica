@@ -21,6 +21,9 @@ class Video:
 
     def get_height(self):
         return self.cap.get(cv.CAP_PROP_FRAME_HEIGHT)
+    
+    def get_fps(self):
+        return self.cap.get(cv.CAP_PROP_FPS)
 
     def close(self):
         self.cap.release()

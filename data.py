@@ -10,8 +10,9 @@ class Data:
         self.filter = Filter()
         self._add_velocity()
         self._add_acceleration()
-        self.add_polar_wrist()
-        self.add_angular_velocity()
+        self._add_polar_wrist()
+        self._add_angular_velocity()
+        self._add_time()
 
     def _add_velocity(self):
         self.df = self.filter.apply_filter(self.df.columns, self.df)
@@ -26,7 +27,7 @@ class Data:
             self.df[f"ay_{object}"] = self.df[f"vy_{object}"].diff()
         self.df = self.filter.apply_filter([column for column in self.df.columns if 'a' in column], self.df)
     
-    def add_polar_wrist(self):
+    def _add_polar_wrist(self):
         x_vector_elbow_to_wrist = self.df['rx_wrist'] - self.df['rx_elbow']
         y_vector_elbow_to_wrist = self.df['ry_wrist'] - self.df['ry_elbow']
         magnitude_vector_elbow_to_wrist = np.sqrt(x_vector_elbow_to_wrist ** 2 + y_vector_elbow_to_wrist ** 2)
@@ -38,8 +39,11 @@ class Data:
         self.df['r_wrist'] = magnitude_vector_elbow_to_wrist
         self.df['theta_wrist'] = np.arccos(cosine_angle)
     
-    def add_angular_velocity(self):
+    def _add_angular_velocity(self):
         self.df['angular_velocity'] = self.df['theta_wrist'].diff()
+    
+    def _add_time(self):
+        self.df['time'] = self.df.index
 
     def get_data(self, save = False):
         if save:
