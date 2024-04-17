@@ -1,13 +1,13 @@
 import pandas as pd
 from datetime import datetime
 import numpy as np
-from filter import Filter
+import filter as ft
+import column_filter as cf
 
 class Data:
     def __init__(self, df, objects):
         self.df = df
         self.objects = objects
-        self.filter = Filter()
         self._add_velocity()
         self._add_acceleration()
         self._add_polar_wrist()
@@ -15,17 +15,17 @@ class Data:
         self._add_time()
 
     def _add_velocity(self):
-        self.df = self.filter.apply_filter(self.df.columns, self.df)
+        self.df = ft.apply_filter(self.df, self.df.columns)
         for object in self.objects:
             self.df[f"vx_{object}"] = self.df[f"rx_{object}"].diff()
             self.df[f"vy_{object}"] = self.df[f"ry_{object}"].diff()
     
     def _add_acceleration(self):
-        self.df = self.filter.apply_filter([column for column in self.df.columns if 'v' in column], self.df)
+        self.df = ft.apply_filter(self.df, cf.velocity_columns(self.df.columns))
         for object in self.objects:
             self.df[f"ax_{object}"] = self.df[f"vx_{object}"].diff()
             self.df[f"ay_{object}"] = self.df[f"vy_{object}"].diff()
-        self.df = self.filter.apply_filter([column for column in self.df.columns if 'a' in column], self.df)
+        self.df = ft.apply_filter(self.df, cf.acceleration_columns(self.df.columns))
     
     def _add_polar_wrist(self):
         x_vector_elbow_to_wrist = self.df['rx_wrist'] - self.df['rx_elbow']

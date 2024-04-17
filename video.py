@@ -9,7 +9,7 @@ class Video:
     def is_opened(self):
         return self.cap.isOpened()
 
-    def getFrames(self):
+    def get_frames(self):
         if self.frames == []:
             while self.cap.isOpened():
                 ret, frame = self.cap.read()

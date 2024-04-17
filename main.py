@@ -15,7 +15,7 @@ if not video.is_opened():
 
 positions = []
 
-for frame in video.getFrames():
+for frame in video.get_frames():
     keypoints = tracker.get_keypoints(frame)
 
     if len(keypoints) > 0:
