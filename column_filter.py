@@ -5,4 +5,4 @@ def velocity_columns(columns):
     return [column for column in columns if 'v' in column.split('_')[0]]
 
 def acceleration_columns(columns):
-    return [column for column in columns if 'a' in column.split('_')[0]]
+    return [column for column in columns if 'a' in column.split('_')[0] and 'theta' not in column.split('_')[0]]
