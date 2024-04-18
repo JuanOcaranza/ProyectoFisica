@@ -74,7 +74,7 @@ if __name__ == "__main__":
     tracker = Tracker([6, 8, 10])
     video = Video("videos/video0.mkv")
 
-    for frame in video.getFrames():
+    for frame in video.get_frames():
         result = tracker._track(frame)
         keypoints = tracker._get_keypoints_from_result(result)
         annotated_frame = result.plot()
