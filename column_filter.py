@@ -8,3 +8,6 @@ def velocity_columns(columns):
 
 def acceleration_columns(columns):
     return [column for column in columns if re.match("a.?_", column)]
+
+def force_columns(columns):
+    return [column for column in columns if re.match("f.?_", column)]
