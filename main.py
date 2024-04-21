@@ -5,6 +5,7 @@ from plotter import Plotter
 from adapter import Adapter
 from unit_converter import Unit_converter
 import column_filter as cf
+from datetime import datetime
 
 reference_distance = 0.3
 tracker = Tracker([6, 8, 10])
@@ -25,11 +26,14 @@ objects = ["shoulder", "elbow", "wrist"]
 adapter = Adapter(positions, objects, video.get_height())
 data = Data(adapter.get_adapted_data(), objects)
 df = data.get_data()
-unit_converter = Unit_converter(df['r_wrist'].iloc[0], reference_distance, video.get_fps(), 1)
+unit_converter = Unit_converter(df['r_wrist'].iloc[0], reference_distance, video.get_fps(), 1, 1, 1)
 df = unit_converter.convert_position(df, cf.position_columns(df.columns))
 df = unit_converter.convert_velocity(df, cf.velocity_columns(df.columns))
 df = unit_converter.convert_acceleration(df, cf.acceleration_columns(df.columns))
+df = unit_converter.convert_angular_velocity(df, ['angular_velocity'])
 df = unit_converter.convert_time(df, ['time'])
+
+df.to_csv(f"csv/data_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv", index = False)
 plotter = Plotter(df)
 
 plotter.show_plot()

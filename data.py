@@ -1,5 +1,4 @@
 import pandas as pd
-from datetime import datetime
 import numpy as np
 import filter as ft
 import column_filter as cf
@@ -37,7 +36,9 @@ class Data:
         elbow_to_wrist_scalar_product_elbow_to_shoulder = x_vector_elbow_to_wrist * x_vector_elbow_to_shoulder + y_vector_elbow_to_wrist * y_vector_elbow_to_shoulder
         cosine_angle = elbow_to_wrist_scalar_product_elbow_to_shoulder / (magnitude_vector_elbow_to_wrist * magnitude_vector_elbow_to_shoulder)
         self.df['r_wrist'] = magnitude_vector_elbow_to_wrist
+        self.df = ft.apply_filter(self.df, ['r_wrist'])
         self.df['theta_wrist'] = np.arccos(cosine_angle)
+        self.df = ft.apply_filter(self.df, ['theta_wrist'])
     
     def _add_angular_velocity(self):
         self.df['angular_velocity'] = self.df['theta_wrist'].diff()
@@ -45,7 +46,5 @@ class Data:
     def _add_time(self):
         self.df['time'] = self.df.index
 
-    def get_data(self, save = False):
-        if save:
-            self.df.to_csv(f"csv/data{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv", index = False)
+    def get_data(self):
         return self.df

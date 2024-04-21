@@ -1,8 +1,10 @@
+import re
+
 def position_columns(columns):
-    return [column for column in columns if 'r' in column.split('_')[0]]
+    return [column for column in columns if re.match("r.?_", column)]
 
 def velocity_columns(columns):
-    return [column for column in columns if 'v' in column.split('_')[0]]
+    return [column for column in columns if re.match("v.?_", column)]
 
 def acceleration_columns(columns):
-    return [column for column in columns if 'a' in column.split('_')[0] and 'theta' not in column.split('_')[0]]
+    return [column for column in columns if re.match("a.?_", column)]
