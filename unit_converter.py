@@ -1,5 +1,9 @@
 class Unit_converter:
-    def __init__(self, current_distance, target_distance, current_time, target_time, current_angle, target_angle):
+    def __init__(self,
+                 current_distance, target_distance,
+                 current_time, target_time,
+                 current_angle = 1, target_angle = 1
+                 ):
         self.distance_factor = target_distance / current_distance
         self.time_factor = target_time / current_time
         self.angle_factor = target_angle / current_angle

@@ -72,7 +72,7 @@ class Tracker:
     
 if __name__ == "__main__":
     tracker = Tracker([6, 8, 10])
-    video = Video("videos/video0.mkv")
+    video = Video("videos/video2.mp4")
 
     for frame in video.get_frames():
         result = tracker._track(frame)
