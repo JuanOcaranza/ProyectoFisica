@@ -7,9 +7,12 @@ from adapter import Adapter
 from unit_converter import Unit_converter
 import column_filter as cf
 from datetime import datetime
+from forces import Forces
 
 reference_distance = 0.3
-mass = 50
+mass_weight = 1
+mass_forearm = 1
+radius_bicep = 0.04
 tracker = Tracker([6, 8, 10])
 video = Video("videos/video3.mp4")
 if not video.is_opened():
@@ -35,7 +38,11 @@ df = unit_converter.convert_position(df, cf.position_columns(df.columns))
 df = unit_converter.convert_velocity(df, cf.velocity_columns(df.columns))
 df = unit_converter.convert_acceleration(df, cf.acceleration_columns(df.columns))
 df = unit_converter.convert_angular_velocity(df, ['angular_velocity'])
+df = unit_converter.convert_angular_acceleration(df, ['angular_acceleration'])
 df = unit_converter.convert_time(df, ['time'])
+
+forces = Forces(df, mass_forearm, mass_weight, radius_bicep)
+df = forces.get_data_with_forces()
 
 plotter = Plotter(df)
 

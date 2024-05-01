@@ -43,3 +43,9 @@ class Unit_converter:
             df[column] = df[column] * self.angle_factor / self.time_factor
         
         return df
+    
+    def convert_angular_acceleration(self, df, columns):
+        for column in columns:
+            df[column] = df[column] * self.angle_factor / (self.time_factor ** 2)
+
+        return df
