@@ -9,6 +9,7 @@ import column_filter as cf
 from datetime import datetime
 from forces import Forces
 
+joules_per_calorie = 4.184
 reference_distance = 0.3
 mass_weight = 1
 mass_forearm = 1
@@ -43,6 +44,8 @@ df = unit_converter.convert_time(df, ['time'])
 
 forces = Forces(df, mass_forearm, mass_weight, radius_bicep)
 df = forces.get_data_with_forces()
+work = forces.get_work()
+calories = work / joules_per_calorie
 
 plotter = Plotter(df)
 
@@ -57,3 +60,5 @@ video.show_with_vectors([
 plotter.show_plot()
 
 video.close()
+
+print(f"Calories: {calories}")
