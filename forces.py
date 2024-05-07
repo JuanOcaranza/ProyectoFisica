@@ -18,10 +18,10 @@ class Forces:
         sum_moment = (inertia_weight + inertia_forearm) * self.df['angular_acceleration']
 
         angle_forearm_g = np.pi - self.df['theta_wrist']
-        moment_weight = radius_weight * mass_weight * g * np.cos(angle_forearm_g)
-        moment_forearm = radius_forearm * mass_forearm * g * np.cos(angle_forearm_g)
+        moment_weight = radius_weight * mass_weight * g * np.sin(angle_forearm_g)
+        moment_forearm = radius_forearm * mass_forearm * g * np.sin(angle_forearm_g)
 
-        self.df['force_bicep'] = (sum_moment - moment_weight - moment_forearm) / (self.radius_bicep * np.cos(self.df['theta_wrist']))
+        self.df['force_bicep'] = (sum_moment - moment_weight - moment_forearm) / (self.radius_bicep * np.sin(self.df['theta_wrist']))
         
         self.df['sum_moment'] = sum_moment
         self.df['moment_weight'] = moment_weight
