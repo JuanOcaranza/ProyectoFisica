@@ -40,6 +40,8 @@ class Data:
         self.df = ft.apply_filter(self.df, ['r_wrist'])
         self.df['theta_wrist'] = np.arccos(cosine_angle)
         self.df = ft.apply_filter(self.df, ['theta_wrist'])
+
+        self.df['distance_elbow_shoulder'] = magnitude_vector_elbow_to_shoulder
     
     def _add_angular_velocity(self):
         self.df['angular_velocity'] = self.df['theta_wrist'].diff()

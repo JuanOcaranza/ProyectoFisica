@@ -33,7 +33,17 @@ class Forces:
     def get_work(self):
         angle_bicep_movement = np.abs(np.pi / 2 - self.df['theta_wrist'])
         projected_force = self.df['force_bicep'] * np.cos(angle_bicep_movement)
-        differential_distance = self.radius_bicep * self.df['angular_velocity']
-        work_i = projected_force * differential_distance
         
-        return np.sum(work_i)
+        distance = np.sqrt(self.df['distance_elbow_shoulder'] ** 2 + self.radius_bicep ** 2 -
+                           2 * self.df['distance_elbow_shoulder'] * self.radius_bicep *
+                           np.cos(self.df['theta_wrist']))
+        delta_distance = distance.diff()
+ 
+        work_i = projected_force * delta_distance
+        work_i_abs = np.abs(work_i)
+
+        self.df['work_i'] = work_i
+
+        self.df['distance_bicep'] = distance
+        
+        return np.sum(work_i_abs)
