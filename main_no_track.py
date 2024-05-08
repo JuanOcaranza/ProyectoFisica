@@ -5,7 +5,6 @@ from plotter import Plotter
 from adapter import Adapter
 from unit_converter import Unit_converter
 import column_filter as cf
-from datetime import datetime
 from forces import Forces
 import pickle as pkl
 
@@ -14,8 +13,8 @@ reference_distance = 0.3
 mass_weight = 1
 mass_forearm = 1
 radius_bicep = 0.04
-video_name = "video0"
-video = Video(f"videos/{video_name}.mkv")
+video_name = "video2"
+video = Video(f"videos/{video_name}.mp4")
 if not video.is_opened():
     print("Video not found")
     exit()
@@ -45,9 +44,6 @@ work = forces.get_work()
 calories = work / joules_per_calorie
 
 plotter = Plotter(df)
-
-raw_data.to_csv(f"csv/raw_data_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv", index = False)
-df.to_csv(f"csv/data_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv", index = False)
 
 video.show_with_vectors([
     (raw_data['rx_wrist'].values, raw_data['ry_wrist'].values, raw_data['vx_wrist'].values, raw_data['vy_wrist'].values, 'v', (0, 255, 0), video.get_fps()),
