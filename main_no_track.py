@@ -1,33 +1,28 @@
 import numpy as np
-from tracker import Tracker
 from video import Video
 from data import Data
 from plotter import Plotter
 from adapter import Adapter
 from unit_converter import Unit_converter
 import column_filter as cf
-from datetime import datetime
 from forces import Forces
+import pickle as pkl
 
 joules_per_calorie = 4.184
 reference_distance = 0.3
 mass_weight = 1
 mass_forearm = 1
 radius_bicep = 0.04
-tracker = Tracker([6, 8, 10])
-video = Video("videos/video2.mp4")
+video_name = "video2"
+video = Video(f"videos/{video_name}.mp4")
 if not video.is_opened():
     print("Video not found")
     exit()
 
-positions = []
 objects = ["shoulder", "elbow", "wrist"]
 
-for frame in video.get_frames():
-    keypoints = tracker.get_keypoints(frame)
-
-    if len(keypoints) > 0:
-        positions.append(keypoints)
+with open(f"keypoints/{video_name}", "rb") as f:
+    positions = pkl.load(f)
 
 adapter = Adapter(positions, objects, video.get_height())
 data = Data(adapter.get_adapted_data(), objects)
@@ -49,9 +44,6 @@ work = forces.get_work()
 calories = work / joules_per_calorie
 
 plotter = Plotter(df)
-
-raw_data.to_csv(f"csv/raw_data_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv", index = False)
-df.to_csv(f"csv/data_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv", index = False)
 
 video.show_with_vectors([
     (raw_data['rx_wrist'].values, raw_data['ry_wrist'].values, raw_data['vx_wrist'].values, raw_data['vy_wrist'].values, 'v', (0, 255, 0), video.get_fps()),
