@@ -13,6 +13,7 @@ class Data:
         self._add_angular_velocity()
         self._add_angular_acceleration()
         self._add_time()
+        self._add_other_positions()
 
     def _add_velocity(self):
         self.df = ft.apply_filter(self.df, self.df.columns)
@@ -41,7 +42,19 @@ class Data:
         self.df['theta_wrist'] = np.arccos(cosine_angle)
         self.df = ft.apply_filter(self.df, ['theta_wrist'])
 
+
         self.df['distance_elbow_shoulder'] = magnitude_vector_elbow_to_shoulder
+        
+        distance_shoulder_vertical = self.df['rx_shoulder'] - self.df['rx_elbow']
+        sin_angle_upperarm_vertical = distance_shoulder_vertical / magnitude_vector_elbow_to_shoulder
+        self.df['angle_upperarm_vertical'] = np.arcsin(sin_angle_upperarm_vertical)
+
+        distance_wrist_horizontal = self.df['ry_wrist'] - self.df['ry_elbow']
+        sin_angle_forarm_horizontal = distance_wrist_horizontal / magnitude_vector_elbow_to_wrist
+        self.df['angle_forearm_horizontal'] = np.arcsin(sin_angle_forarm_horizontal)
+
+        self.df['angle_forearm_vertical'] = self.df['theta_wrist'] + self.df['angle_upperarm_vertical']
+        self.df['angle_upperarm_horizontal'] = self.df['theta_wrist'] + self.df['angle_forearm_horizontal']
     
     def _add_angular_velocity(self):
         self.df['angular_velocity'] = self.df['theta_wrist'].diff()
@@ -53,6 +66,10 @@ class Data:
     
     def _add_time(self):
         self.df['time'] = self.df.index
+
+    def _add_other_positions(self):
+        self.df['rx_forearm'] = self.df['rx_elbow'] + ((self.df['rx_wrist'] - self.df['rx_elbow']) / 2)
+        self.df['ry_forearm'] = self.df['ry_elbow'] + ((self.df['ry_wrist'] - self.df['ry_elbow']) / 2)
 
     def get_data(self):
         return self.df

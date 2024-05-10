@@ -13,6 +13,12 @@ class Unit_converter:
             df[column] = df[column] * self.distance_factor
         
         return df
+
+    def revert_position(self, df, columns):
+        for column in columns:
+            df[column] = df[column] / self.distance_factor
+        
+        return df
     
     def convert_velocity(self, df, columns):
         for column in columns:

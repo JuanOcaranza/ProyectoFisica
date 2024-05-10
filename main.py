@@ -45,10 +45,13 @@ df = unit_converter.convert_position(df, ['distance_elbow_shoulder'])
 
 forces = Forces(df, mass_forearm, mass_weight, radius_bicep)
 df = forces.get_data_with_forces()
-work = forces.get_work()
+work, work_abs = forces.get_work()
 calories = work / joules_per_calorie
+calories_abs = work_abs / joules_per_calorie
 
 plotter = Plotter(df)
+
+df = unit_converter.revert_position(df, ['rx_bicep', 'ry_bicep'])
 
 raw_data.to_csv(f"csv/raw_data_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv", index = False)
 df.to_csv(f"csv/data_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv", index = False)
@@ -56,10 +59,21 @@ df.to_csv(f"csv/data_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv", index 
 video.show_with_vectors([
     (raw_data['rx_wrist'].values, raw_data['ry_wrist'].values, raw_data['vx_wrist'].values, raw_data['vy_wrist'].values, 'v', (0, 255, 0), video.get_fps()),
     (raw_data['rx_wrist'].values, raw_data['ry_wrist'].values, raw_data['ax_wrist'].values, raw_data['ay_wrist'].values, 'a', (0, 0, 255), video.get_fps() ** 2)
-], "Velocity and Acceleration")
+], title = "Velocity and Acceleration")
+
+video.show_with_vectors([
+        (df['rx_bicep'].values, df['ry_bicep'].values, df['fx_bicep'].values, df['fy_bicep'].values, 'f_bicep', (0, 255, 0), 1),
+        (raw_data['rx_forearm'].values, raw_data['ry_forearm'].values, df['px_forearm'].values, df['py_forearm'].values, '5p_forearm', (0, 0, 255), 5),
+        (raw_data['rx_wrist'].values, raw_data['ry_wrist'].values, df['px_weight'].values, df['py_weight'].values, '5p_weight', (255, 0, 0), 5)
+    ], [
+        (raw_data['rx_shoulder'].values, raw_data['ry_shoulder'].values, raw_data['rx_elbow'].values, raw_data['ry_elbow'].values),
+        (raw_data['rx_elbow'].values, raw_data['ry_elbow'].values, raw_data['rx_wrist'].values, raw_data['ry_wrist'].values)
+    ],
+    "Forces")
 
 plotter.show_plot()
 
 video.close()
 
 print(f"Calories: {calories}")
+print(f"Calories abs: {calories_abs}")

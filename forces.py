@@ -27,6 +27,17 @@ class Forces:
         self.df['moment_weight'] = moment_weight
         self.df['moment_forearm'] = moment_forearm
 
+        self.df['px_weight'] = 0
+        self.df['py_weight'] = mass_weight * g
+
+        self.df['px_forearm'] = 0
+        self.df['py_forearm'] = mass_forearm * g
+
+        self.df['rx_bicep'] = self.df['rx_elbow'] + self.radius_bicep * np.cos(self.df['angle_forearm_horizontal'])
+        self.df['ry_bicep'] = self.df['ry_elbow'] + self.radius_bicep * np.cos(self.df['angle_forearm_vertical'])
+        self.df['fx_bicep'] = self.df['force_bicep'] * np.cos(self.df['angle_upperarm_horizontal'])
+        self.df['fy_bicep'] = self.df['force_bicep'] * np.cos(self.df['angle_upperarm_vertical'])
+
     def get_data_with_forces(self):
         return self.df
     
@@ -46,4 +57,4 @@ class Forces:
 
         self.df['distance_bicep'] = distance
         
-        return np.sum(work_i_abs)
+        return np.sum(work_i), np.sum(work_i_abs)
