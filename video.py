@@ -33,7 +33,7 @@ class Video:
         return self.get_height() - y0, self.get_height() - y1
     
     def show_with_vectors(self, vectors, lines = [], title = "Video"):
-        _wait_user()
+        frames = []
         for index, frame in enumerate(self.get_frames()):
             for vector in vectors:
                 x0s, y0s, dxs, dys, tag, color, scale = vector
@@ -46,10 +46,30 @@ class Video:
                 if _is_valid_vector(x0s, y0s, x1s, y1s, index):
                     y0_converted, y1_converted = self._move_yo_y1_origin_to_top_left(y0s[index], y1s[index])
                     _draw_line(frame, int(x0s[index]), int(y0_converted), int(x1s[index]), int(y1_converted))
-            cv.imshow(title, frame)
-            if cv.waitKey(33) & 0xFF == ord('q'):
-                break
+            frames.append(frame)
+        
+        self._show_and_control(title, frames)
+    
+    def _show_and_control(self, title, frames):
+        index = -1
+        key = -1
+        isPaused = False
 
+        while key != ord('q'):
+            if key == -1 and not isPaused and index < len(frames) - 1:
+                index += 1
+            elif key == ord('p'):
+                isPaused = not isPaused
+            elif key == ord('a') and index > 0:
+                index -= 1
+                isPaused = True
+            elif key == ord('d') and index < len(frames) - 1:
+                index += 1
+                isPaused = True
+
+            cv.imshow(title, frames[index])
+            key = cv.waitKey(33)
+        
         cv.destroyAllWindows()
 
     def close(self):
