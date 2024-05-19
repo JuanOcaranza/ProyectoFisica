@@ -1,12 +1,13 @@
 import numpy as np
+import pandas as pd
 
 class Forces:
-    def __init__(self, df, mass_forearm, mass_weight, radius_bicep):
+    def __init__(self, df: pd.DataFrame, mass_forearm: float, mass_weight: float, radius_bicep: float):
         self.df = df
         self.radius_bicep = radius_bicep
         self._add_force_bicep(mass_forearm, mass_weight)
 
-    def _add_force_bicep(self, mass_forearm, mass_weight):
+    def _add_force_bicep(self, mass_forearm: float, mass_weight: float):
         g = -9.81
 
         radius_weight = self.df['r_wrist']

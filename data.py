@@ -4,7 +4,7 @@ import filter as ft
 import column_filter as cf
 
 class Data:
-    def __init__(self, df, objects):
+    def __init__(self, df: pd.DataFrame, objects: list):
         self.df = df
         self.objects = objects
         self._add_velocity()
