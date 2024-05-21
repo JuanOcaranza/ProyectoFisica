@@ -1,5 +1,5 @@
  # Proyecto Física
- En este proyecto analisamos videos del ejercicio curl de bicep y utilizamos lo aprendido en física para determinar la cantidad de calorías consumidas.
+ En este proyecto analizamos videos del ejercicio curl de bicep y utilizamos lo aprendido en física para determinar la cantidad de calorías consumidas.
  
  ## Instalación
  - Clonar o descargar proyecto
