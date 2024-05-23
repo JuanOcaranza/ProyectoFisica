@@ -15,6 +15,16 @@ Si no se desea calcular las calorías sino ver cómo se realiza el trackeo se pu
 
 En todos los casos el nombre del video está hardcodeado.
 
+## Controles de video
+- **q**: cerrar.
+- **p**: pausar/reanudar.
+- **a**: retroceder un frame.
+- **d**: avanzar un frame.
+- **r**: reiniciar.
+
+## Gráficos
+Se puede acceder a los gráficos sin necesidad de ejecutar nada abriendo el archivo correspondiente al video en la carpeta [graphs](https://github.com/JuanOcaranza/ProyectoFisica/tree/main/graphs).
+
 ## Documentación
 Para enter cómo funciona se puede ver los notebooks:
 - [adapter_notebook.ipynb](https://github.com/JuanOcaranza/ProyectoFisica/blob/main/adapter_notebook.ipynb)

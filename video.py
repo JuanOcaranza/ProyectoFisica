@@ -52,7 +52,7 @@ class Video:
             x_sign = 50
             for sign in signs:
                 values, tag, color = sign
-                if not np.isnan(values[index]):
+                if index < len(values) and not np.isnan(values[index]):
                     _draw_sign(frame_with_vectors, x_sign, values[index] > 0, tag, color)
                     x_sign += 50
 
