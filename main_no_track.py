@@ -7,13 +7,15 @@ from unit_converter import Unit_converter
 import column_filter as cf
 from forces import Forces
 import pickle as pkl
+from energy import Energy
 
 joules_per_calorie = 4.184
 reference_distance = 0.3
 mass_weight = 1
 mass_forearm = 1
 radius_bicep = 0.04
-video_name = "video2"
+height_shoulder = 1.05
+video_name = "video4"
 video = Video(f"videos/{video_name}.mp4")
 if not video.is_opened():
     print("Video not found")
@@ -44,6 +46,11 @@ work, work_abs = forces.get_work()
 calories = work / joules_per_calorie
 calories_abs = work_abs / joules_per_calorie
 
+energy = Energy(df, mass_weight, height_shoulder)
+work_from_energy, work_abs_from_energy = energy.get_work()
+calories_from_energy = work_from_energy / joules_per_calorie
+calories_abs_from_energy = work_abs_from_energy / joules_per_calorie
+
 plotter = Plotter(df)
 
 df = unit_converter.revert_position(df, ['rx_bicep', 'ry_bicep'])
@@ -73,3 +80,5 @@ video.close()
 
 print(f"Calories: {calories}")
 print(f"Calories abs: {calories_abs}")
+print(f"Calories from energy: {calories_from_energy}")
+print(f"Calories abs from energy: {calories_abs_from_energy}")

@@ -2,7 +2,7 @@ from tracker import Tracker
 from video import Video
 import pickle as pkl
 
-video_name = "video3"
+video_name = "video4"
 tracker = Tracker([6, 8, 10])
 video = Video(f"videos/{video_name}.mp4")
 if not video.is_opened():
