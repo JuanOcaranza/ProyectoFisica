@@ -17,7 +17,7 @@ mass_forearm = 1
 radius_bicep = 0.04
 height_shoulder = 1.05
 tracker = Tracker([6, 8, 10])
-video = Video("videos/video4.mp4")
+video = Video("videos/video2.mp4")
 if not video.is_opened():
     print("Video not found")
     exit()
@@ -43,7 +43,7 @@ df = unit_converter.convert_acceleration(df, cf.acceleration_columns(df.columns)
 df = unit_converter.convert_angular_velocity(df, ['angular_velocity'])
 df = unit_converter.convert_angular_acceleration(df, ['angular_acceleration'])
 df = unit_converter.convert_time(df, ['time'])
-df = unit_converter.convert_position(df, ['distance_elbow_shoulder'])
+df = unit_converter.convert_position(df, ['distance_elbow_shoulder', 'x_vector_elbow_shoulder', 'y_vector_elbow_shoulder'])
 
 forces = Forces(df, mass_forearm, mass_weight, radius_bicep)
 df = forces.get_data_with_forces()

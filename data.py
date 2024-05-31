@@ -44,6 +44,8 @@ class Data:
 
 
         self.df['distance_elbow_shoulder'] = magnitude_vector_elbow_to_shoulder
+        self.df['x_vector_elbow_to_shoulder'] = x_vector_elbow_to_shoulder
+        self.df['y_vector_elbow_to_shoulder'] = y_vector_elbow_to_shoulder
         
         distance_shoulder_vertical = self.df['rx_shoulder'] - self.df['rx_elbow']
         sin_angle_upperarm_vertical = distance_shoulder_vertical / magnitude_vector_elbow_to_shoulder

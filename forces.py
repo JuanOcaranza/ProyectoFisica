@@ -23,6 +23,12 @@ class Forces:
         moment_forearm = radius_forearm * mass_forearm * g * np.sin(angle_forearm_g)
 
         self.df['force_bicep'] = (sum_moment - moment_weight - moment_forearm) / (self.radius_bicep * np.sin(self.df['theta_wrist']))
+
+        x_versor_elbow_to_shoulder = self.df['x_vector_elbow_to_shoulder'] / self.df['distance_elbow_shoulder']
+        y_versor_elbow_to_shoulder = self.df['y_vector_elbow_to_shoulder'] / self.df['distance_elbow_shoulder']
+        
+        self.df['fx_bicep'] = self.df['force_bicep'] * x_versor_elbow_to_shoulder
+        self.df['fy_bicep'] = self.df['force_bicep'] * y_versor_elbow_to_shoulder
         
         self.df['sum_moment'] = sum_moment
         self.df['moment_weight'] = moment_weight
@@ -36,14 +42,13 @@ class Forces:
 
         self.df['rx_bicep'] = self.df['rx_elbow'] + self.radius_bicep * np.cos(self.df['angle_forearm_horizontal'])
         self.df['ry_bicep'] = self.df['ry_elbow'] + self.radius_bicep * np.cos(self.df['angle_forearm_vertical'])
-        self.df['fx_bicep'] = self.df['force_bicep'] * np.cos(self.df['angle_upperarm_horizontal'])
-        self.df['fy_bicep'] = self.df['force_bicep'] * np.cos(self.df['angle_upperarm_vertical'])
 
     def get_data_with_forces(self):
         return self.df
     
     def get_work(self):
-        angle_bicep_movement = np.abs(np.pi / 2 - self.df['theta_wrist'])
+        angle_bicep_movement = self.df['theta_wrist'] + np.pi / 2 * self.df['angular_velocity'] / np.abs(self.df['angular_velocity'])
+        self.df['angle_bicep_movement'] = angle_bicep_movement
         projected_force = self.df['force_bicep'] * np.cos(angle_bicep_movement)
         
         distance = np.sqrt(self.df['distance_elbow_shoulder'] ** 2 + self.radius_bicep ** 2 -
@@ -51,7 +56,7 @@ class Forces:
                            np.cos(self.df['theta_wrist']))
         delta_distance = distance.diff()
  
-        work_i = projected_force * delta_distance
+        work_i = projected_force * np.abs(delta_distance)
         work_i_abs = np.abs(work_i)
 
         self.df['work_i'] = work_i
