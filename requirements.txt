@@ -1,7 +1,9 @@
+fastapi==0.111.0
 numpy==1.26.4
 opencv_python==4.9.0.80
 pandas==2.2.2
 plotly==5.20.0
-scipy==1.13.0
+pydantic==1.10.15
+scipy==1.13.1
 torch==2.2.2+cu121
 ultralytics==8.1.47
