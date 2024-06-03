@@ -7,3 +7,4 @@ pydantic==1.10.15
 scipy==1.13.1
 torch==2.2.2+cu121
 ultralytics==8.1.47
+uvicorn[standard]==0.30.0
