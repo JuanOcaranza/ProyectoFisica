@@ -9,7 +9,8 @@ class Plotter:
         for column in df.columns:
             if column == 'time':
                 continue
-            self.fig.add_trace(go.Line(x = df['time'], y = df[column], name = column), secondary_y = False)
+            self.fig.add_trace(go.Line(
+                x = df['time'], y = df[column], name = column), secondary_y = False)
 
     def show_plot(self):
         self.fig.show()

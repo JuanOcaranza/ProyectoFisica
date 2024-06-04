@@ -1,8 +1,10 @@
 import numpy as np
 import pandas as pd
+import filter as ft
 
 class Forces:
-    def __init__(self, df: pd.DataFrame, mass_forearm: float, mass_weight: float, radius_bicep: float):
+    def __init__(self,
+                 df: pd.DataFrame, mass_forearm: float, mass_weight: float, radius_bicep: float):
         self.df = df
         self.radius_bicep = radius_bicep
         self._add_force_bicep(mass_forearm, mass_weight)
@@ -22,14 +24,17 @@ class Forces:
         moment_weight = radius_weight * mass_weight * g * np.sin(angle_forearm_g)
         moment_forearm = radius_forearm * mass_forearm * g * np.sin(angle_forearm_g)
 
-        self.df['force_bicep'] = (sum_moment - moment_weight - moment_forearm) / (self.radius_bicep * np.sin(self.df['theta_wrist']))
+        self.df['force_bicep'] = (sum_moment - moment_weight - moment_forearm) / (
+            self.radius_bicep * np.sin(self.df['theta_wrist']))
 
-        x_versor_elbow_to_shoulder = self.df['x_vector_elbow_to_shoulder'] / self.df['distance_elbow_shoulder']
-        y_versor_elbow_to_shoulder = self.df['y_vector_elbow_to_shoulder'] / self.df['distance_elbow_shoulder']
-        
+        x_versor_elbow_to_shoulder = self.df['x_vector_elbow_to_shoulder'] / (
+            self.df['distance_elbow_shoulder'])
+        y_versor_elbow_to_shoulder = self.df['y_vector_elbow_to_shoulder'] / (
+            self.df['distance_elbow_shoulder'])
+
         self.df['fx_bicep'] = self.df['force_bicep'] * x_versor_elbow_to_shoulder
         self.df['fy_bicep'] = self.df['force_bicep'] * y_versor_elbow_to_shoulder
-        
+
         self.df['sum_moment'] = sum_moment
         self.df['moment_weight'] = moment_weight
         self.df['moment_forearm'] = moment_forearm
@@ -40,27 +45,31 @@ class Forces:
         self.df['px_forearm'] = 0
         self.df['py_forearm'] = mass_forearm * g
 
-        self.df['rx_bicep'] = self.df['rx_elbow'] + self.radius_bicep * np.cos(self.df['angle_forearm_horizontal'])
-        self.df['ry_bicep'] = self.df['ry_elbow'] + self.radius_bicep * np.cos(self.df['angle_forearm_vertical'])
+        self.df['rx_bicep'] = self.df['rx_elbow'] + (
+            self.radius_bicep * np.cos(self.df['angle_forearm_horizontal']))
+        self.df['ry_bicep'] = self.df['ry_elbow'] + (
+            self.radius_bicep * np.cos(self.df['angle_forearm_vertical']))
 
     def get_data_with_forces(self):
         return self.df
-    
+
     def get_work(self):
-        angle_bicep_movement = self.df['theta_wrist'] + np.pi / 2 * self.df['angular_velocity'] / np.abs(self.df['angular_velocity'])
+        angle_bicep_movement = self.df['theta_wrist'] + (
+            np.pi / 2 * self.df['angular_velocity'] / np.abs(self.df['angular_velocity']))
         self.df['angle_bicep_movement'] = angle_bicep_movement
         projected_force = self.df['force_bicep'] * np.cos(angle_bicep_movement)
-        
+
         distance = np.sqrt(self.df['distance_elbow_shoulder'] ** 2 + self.radius_bicep ** 2 -
                            2 * self.df['distance_elbow_shoulder'] * self.radius_bicep *
                            np.cos(self.df['theta_wrist']))
         delta_distance = distance.diff()
- 
-        work_i = projected_force * np.abs(delta_distance)
-        work_i_abs = np.abs(work_i)
 
-        self.df['work_i'] = work_i
+        self.df['work_i'] = projected_force * np.abs(delta_distance)
+        self.df = ft.apply_filter(self.df, ['work_i'])
+
+        work_i_abs = np.abs(self.df['work_i'])
+
 
         self.df['distance_bicep'] = distance
-        
-        return np.sum(work_i), np.sum(work_i_abs)
+
+        return np.sum(work_i_abs)

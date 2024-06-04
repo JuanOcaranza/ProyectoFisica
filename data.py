@@ -44,7 +44,7 @@ class Data:
 
         cosine_angle = elbow_to_wrist_scalar_product_elbow_to_shoulder / (
             magnitude_vector_elbow_to_wrist * magnitude_vector_elbow_to_shoulder)
-        
+
         self.df['r_wrist'] = magnitude_vector_elbow_to_wrist
         self.df = ft.apply_filter(self.df, ['r_wrist'])
         self.df['theta_wrist'] = np.arccos(cosine_angle)

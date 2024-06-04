@@ -18,16 +18,14 @@ async def new_video(params: NewVideoRequestParams):
     if keypoints is None:
         raise HTTPException(status_code = 500, detail = "Couldn't get keypoints")
 
-    calories, calories_abs, calories_from_energy, calories_abs_from_energy = process_keypoints(
+    calories, calories_from_energy = process_keypoints(
         params.video_name, video, params.distance_elbow_wrist, params.mass_weight,
         params.mass_forearm, params.radius_bicep, keypoints)
     video.close()
 
     return {
         "calories": calories,
-        "calories_abs": calories_abs,
         "calories_from_energy": calories_from_energy,
-        "calories_abs_from_energy": calories_abs_from_energy
     }
 
 @app.post("/api/tracked_video")
@@ -40,14 +38,12 @@ async def tracked_video(params: TrackedVideoRequestParams):
     if keypoints is None:
         raise HTTPException(status_code = 404, detail = "Keypoints not found")
 
-    calories, calories_abs, calories_from_energy, calories_abs_from_energy = process_keypoints(
+    calories, calories_from_energy = process_keypoints(
         params.video_name, video, params.distance_elbow_wrist, params.mass_weight,
         params.mass_forearm, params.radius_bicep, keypoints)
     video.close()
 
     return {
         "calories": calories,
-        "calories_abs": calories_abs,
         "calories_from_energy": calories_from_energy,
-        "calories_abs_from_energy": calories_abs_from_energy
     }

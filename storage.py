@@ -20,7 +20,7 @@ def _get_video(path: str) -> Video:
 def get_keypoints(name: str) -> list:
     with open(f"keypoints/{name}", "rb") as f:
         return pkl.load(f)
-    
+
 def save_keypoints(name: str, keypoints: list):
     with open(f"keypoints/{name}", "wb") as f:
         pkl.dump(keypoints, f)

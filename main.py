@@ -26,7 +26,7 @@ if keypoints is None:
     sys.exit(KEYPOINTS_NOT_FOUND)
 
 process_video(VIDEO_NAME, video, ARM)
-calories, calories_abs, calories_from_energy, calories_abs_from_energy = process_keypoints(
+calories, calories_from_energy = process_keypoints(
     VIDEO_NAME, video, DISTANCE_ELBOW_WRIST, MASS_WEIGHT, MASS_FOREARM, RADIUS_BICEP, keypoints)
 video.close()
 
@@ -42,6 +42,4 @@ data_frame = get_data_frame(VIDEO_NAME)
 show_plot(data_frame)
 
 print(f"Calories: {calories}")
-print(f"Calories abs: {calories_abs}")
 print(f"Calories from energy: {calories_from_energy}")
-print(f"Calories abs from energy: {calories_abs_from_energy}")

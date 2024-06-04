@@ -24,16 +24,16 @@ class Video:
 
     def get_width(self) -> int:
         return int(self.cap.get(cv.CAP_PROP_FRAME_WIDTH))
-    
+
     def get_fps(self) -> float:
         return self.cap.get(cv.CAP_PROP_FPS)
-    
+
     def _move_yo_dy_origin_to_top_left(self, y0, dy):
         return self.get_height() - y0, -dy
-    
+
     def _move_yo_y1_origin_to_top_left(self, y0, y1):
         return self.get_height() - y0, self.get_height() - y1
-    
+
     def copy_with_vectors(self, vectors, lines = [], signs = []) -> list:
         frames_with_vectors = []
         for index, frame in enumerate(self.get_frames()):
@@ -41,16 +41,20 @@ class Video:
             for vector in vectors:
                 x0s, y0s, dxs, dys, tag, color, scale = vector
                 if _is_valid_vector(x0s, y0s, dxs, dys, index):
-                    y0_converted, dy_converted = self._move_yo_dy_origin_to_top_left(y0s[index], dys[index])
+                    y0_converted, dy_converted = self._move_yo_dy_origin_to_top_left(
+                        y0s[index], dys[index])
                     scaled_dx, scaled_dy = dxs[index] * scale, dy_converted * scale
-                    _draw_vector(frame_with_vectors, int(x0s[index]), int(y0_converted), int(scaled_dx), int(scaled_dy), tag, color)
+                    _draw_vector(frame_with_vectors, int(x0s[index]), int(y0_converted), int(scaled_dx),
+                                 int(scaled_dy), tag, color)
 
             for line in lines:
                 x0s, y0s, x1s, y1s = line
                 if _is_valid_vector(x0s, y0s, x1s, y1s, index):
-                    y0_converted, y1_converted = self._move_yo_y1_origin_to_top_left(y0s[index], y1s[index])
-                    _draw_line(frame_with_vectors, int(x0s[index]), int(y0_converted), int(x1s[index]), int(y1_converted))
-            
+                    y0_converted, y1_converted = self._move_yo_y1_origin_to_top_left(
+                        y0s[index], y1s[index])
+                    _draw_line(frame_with_vectors, int(x0s[index]), int(y0_converted),
+                               int(x1s[index]), int(y1_converted))
+
             x_sign = 50
             for sign in signs:
                 values, tag, color = sign
@@ -69,14 +73,15 @@ class Video:
         self.cap.release()
 
 def _is_valid_vector(x0s, y0s, dxs, dys, index) -> bool:
-    return index < len(x0s) and not np.isnan(x0s[index]) and not np.isnan(y0s[index]) and not np.isnan(dxs[index]) and not np.isnan(dys[index])
+    return index < len(x0s) and not np.isnan(x0s[index]) and not (
+        np.isnan(y0s[index])) and not np.isnan(dxs[index]) and not np.isnan(dys[index])
 
 def _draw_vector(frame, x0, y0, dx, dy, tag, color):
-        x1 = x0 + dx
-        y1 = y0 + dy
-        cv.arrowedLine(frame, (x0, y0), (x1, y1), color, 2)
-        cv.circle(frame, (x0, y0), 3, color, -1)
-        cv.putText(frame, tag, (x1, y1 - 10), cv.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
+    x1 = x0 + dx
+    y1 = y0 + dy
+    cv.arrowedLine(frame, (x0, y0), (x1, y1), color, 2)
+    cv.circle(frame, (x0, y0), 3, color, -1)
+    cv.putText(frame, tag, (x1, y1 - 10), cv.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
 
 def _draw_line(frame, x0, y0, x1, y1):
     cv.line(frame, (x0, y0), (x1, y1), (255, 255, 255), 2)
@@ -94,32 +99,33 @@ def _draw_sign(frame, x, up, tag, color):
 
 def _wait_user():
     wait_frame = np.zeros((100, 400, 3), np.uint8)
-    cv.putText(wait_frame, "Press any key to continue", (10, 50), cv.FONT_HERSHEY_SIMPLEX, 0.9, (255, 255, 255), 2)
+    cv.putText(wait_frame, "Press any key to continue", (10, 50),
+               cv.FONT_HERSHEY_SIMPLEX, 0.9, (255, 255, 255), 2)
     cv.imshow("Wait", wait_frame)
     cv.waitKey(0)
     cv.destroyWindow("Wait")
 
 def show_and_control(title, frames):
-        index = -1
-        key = -1
-        isPaused = False
+    index = -1
+    key = -1
+    isPaused = False
 
-        while key != ord('q'):
-            if key == -1 and not isPaused and index < len(frames) - 1:
-                index += 1
-            elif key == ord('p'):
-                isPaused = not isPaused
-            elif key == ord('a') and index > 0:
-                index -= 1
-                isPaused = True
-            elif key == ord('d') and index < len(frames) - 1:
-                index += 1
-                isPaused = True
-            elif key == ord('r'):
-                index = 0
-                isPaused = True
+    while key != ord('q'):
+        if key == -1 and not isPaused and index < len(frames) - 1:
+            index += 1
+        elif key == ord('p'):
+            isPaused = not isPaused
+        elif key == ord('a') and index > 0:
+            index -= 1
+            isPaused = True
+        elif key == ord('d') and index < len(frames) - 1:
+            index += 1
+            isPaused = True
+        elif key == ord('r'):
+            index = 0
+            isPaused = True
 
-            cv.imshow(title, frames[index])
-            key = cv.waitKey(33)
-        
-        cv.destroyAllWindows()
+        cv.imshow(title, frames[index])
+        key = cv.waitKey(33)
+
+    cv.destroyAllWindows()

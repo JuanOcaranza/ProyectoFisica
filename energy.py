@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import filter as ft
 
 class Energy:
     def __init__(self, df: pd.DataFrame, mass_weight: float, mass_forearm: float):
@@ -19,4 +20,5 @@ class Energy:
 
     def get_work(self):
         self.df['work_i_from_energy'] = self.df['mechanical_energy'].diff()
-        return np.sum(self.df['work_i_from_energy']), np.sum(np.abs(self.df['work_i_from_energy']))
+        self.df = ft.apply_filter(self.df, ['work_i_from_energy'])
+        return np.sum(np.abs(self.df['work_i_from_energy']))

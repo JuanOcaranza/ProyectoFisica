@@ -11,45 +11,45 @@ class Unit_converter:
     def convert_position(self, df, columns):
         for column in columns:
             df[column] = df[column] * self.distance_factor
-        
+
         return df
 
     def revert_position(self, df, columns):
         for column in columns:
             df[column] = df[column] / self.distance_factor
-        
+
         return df
-    
+
     def convert_velocity(self, df, columns):
         for column in columns:
             df[column] = df[column] * self.distance_factor / self.time_factor
-        
+
         return df
-    
+
     def convert_acceleration(self, df, columns):
         for column in columns:
             df[column] = df[column] * self.distance_factor / (self.time_factor ** 2)
-        
+
         return df
-    
+
     def convert_time(self, df, columns):
         for column in columns:
             df[column] = df[column] * self.time_factor
-        
+
         return df
-    
+
     def convert_angle(self, df, columns):
         for column in columns:
             df[column] = df[column] * self.angle_factor
-        
+
         return df
-    
+
     def convert_angular_velocity(self, df, columns):
         for column in columns:
             df[column] = df[column] * self.angle_factor / self.time_factor
-        
+
         return df
-    
+
     def convert_angular_acceleration(self, df, columns):
         for column in columns:
             df[column] = df[column] * self.angle_factor / (self.time_factor ** 2)

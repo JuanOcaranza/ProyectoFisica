@@ -15,7 +15,7 @@ JOULES_PER_CALORIE = 4.184
 
 def process_keypoints(name: str, video: Video, distance_elbow_wrist: float,
                       mass_weight: float, mass_forearm: float, radius_bicep: float,
-                      keypoints: list) -> tuple[float, float, float, float]:
+                      keypoints: list) -> tuple[float, float]:
     objects = ["shoulder", "elbow", "wrist"]
     adapter = Adapter(keypoints, objects, video.get_height())
     data = Data(adapter.get_adapted_data(), objects)
@@ -34,14 +34,12 @@ def process_keypoints(name: str, video: Video, distance_elbow_wrist: float,
 
     forces = Forces(df, mass_forearm, mass_weight, radius_bicep)
     df = forces.get_data_with_forces()
-    work, work_abs = forces.get_work()
+    work = forces.get_work()
     calories = work / JOULES_PER_CALORIE
-    calories_abs = work_abs / JOULES_PER_CALORIE
 
     energy = Energy(df, mass_weight, mass_forearm)
-    work_from_energy, work_abs_from_energy = energy.get_work()
+    work_from_energy = energy.get_work()
     calories_from_energy = work_from_energy / JOULES_PER_CALORIE
-    calories_abs_from_energy = work_abs_from_energy / JOULES_PER_CALORIE
 
     save_data_frame(name, df)
 
@@ -77,7 +75,7 @@ def process_keypoints(name: str, video: Video, distance_elbow_wrist: float,
     ])
     save_forces_video(name, forces_frames, video.get_fps(), video.get_width(), video.get_height())
 
-    return calories, calories_abs, calories_from_energy, calories_abs_from_energy
+    return calories, calories_from_energy
 
 def show_plot(df: pd.DataFrame):
     plotter = Plotter(df)
@@ -106,7 +104,7 @@ if __name__ == "__main__":
         print("Keypoints not found")
         sys.exit(KEYPOINTS_NOT_FOUND)
 
-    _calories, _calories_abs, _calories_from_energy, _calories_abs_from_energy = process_keypoints(
+    _calories, _calories_from_energy = process_keypoints(
         VIDEO_NAME, _video, DISTANCE_ELBOW_WRIST, MASS_WEIGHT, MASS_FOREARM,
         RADIUS_BICEP, _keypoints
     )
@@ -124,6 +122,4 @@ if __name__ == "__main__":
     show_plot(data_frame)
 
     print(f"Calories: {_calories}")
-    print(f"Calories abs: {_calories_abs}")
     print(f"Calories from energy: {_calories_from_energy}")
-    print(f"Calories abs from energy: {_calories_abs_from_energy}")
