@@ -15,7 +15,7 @@ JOULES_PER_CALORIE = 4.184
 
 def process_keypoints(name: str, video: Video, distance_elbow_wrist: float,
                       mass_weight: float, mass_forearm: float, radius_bicep: float,
-                      height_shoulder: float, keypoints: list) -> tuple[float, float, float, float]:
+                      keypoints: list) -> tuple[float, float, float, float]:
     objects = ["shoulder", "elbow", "wrist"]
     adapter = Adapter(keypoints, objects, video.get_height())
     data = Data(adapter.get_adapted_data(), objects)
@@ -29,7 +29,8 @@ def process_keypoints(name: str, video: Video, distance_elbow_wrist: float,
     df = unit_converter.convert_angular_velocity(df, ['angular_velocity'])
     df = unit_converter.convert_angular_acceleration(df, ['angular_acceleration'])
     df = unit_converter.convert_time(df, ['time'])
-    df = unit_converter.convert_position(df, ['distance_elbow_shoulder', 'x_vector_elbow_to_shoulder', 'y_vector_elbow_to_shoulder'])
+    df = unit_converter.convert_position(df, [
+        'distance_elbow_shoulder', 'x_vector_elbow_to_shoulder', 'y_vector_elbow_to_shoulder'])
 
     forces = Forces(df, mass_forearm, mass_weight, radius_bicep)
     df = forces.get_data_with_forces()
@@ -37,7 +38,7 @@ def process_keypoints(name: str, video: Video, distance_elbow_wrist: float,
     calories = work / JOULES_PER_CALORIE
     calories_abs = work_abs / JOULES_PER_CALORIE
 
-    energy = Energy(df, mass_weight, height_shoulder)
+    energy = Energy(df, mass_weight, mass_forearm)
     work_from_energy, work_abs_from_energy = energy.get_work()
     calories_from_energy = work_from_energy / JOULES_PER_CALORIE
     calories_abs_from_energy = work_abs_from_energy / JOULES_PER_CALORIE
@@ -92,7 +93,6 @@ if __name__ == "__main__":
     MASS_WEIGHT = 1
     MASS_FOREARM = 1
     RADIUS_BICEP = 0.04
-    HEIGHT_SHOULDER = 1.05
     VIDEO_NAME = "video2"
     EXTENSION = "mp4"
 
@@ -108,7 +108,7 @@ if __name__ == "__main__":
 
     _calories, _calories_abs, _calories_from_energy, _calories_abs_from_energy = process_keypoints(
         VIDEO_NAME, _video, DISTANCE_ELBOW_WRIST, MASS_WEIGHT, MASS_FOREARM,
-        RADIUS_BICEP, HEIGHT_SHOULDER, _keypoints
+        RADIUS_BICEP, _keypoints
     )
     _video.close()
 

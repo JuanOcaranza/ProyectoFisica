@@ -7,7 +7,6 @@ class NewVideoRequestParams(BaseModel):
     mass_weight: float
     mass_forearm: float
     radius_bicep: float
-    height_shoulder: float
     arm: str
 
 class TrackedVideoRequestParams(BaseModel):
@@ -17,4 +16,3 @@ class TrackedVideoRequestParams(BaseModel):
     mass_weight: float
     mass_forearm: float
     radius_bicep: float
-    height_shoulder: float

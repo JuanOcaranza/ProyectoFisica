@@ -162,7 +162,6 @@ cython_debug/
 # YOLO models
 *.pt
 
-csv
 runs
 
 test.ipynb
