@@ -2,15 +2,14 @@ import cv2 as cv
 import numpy as np
 
 class Video:
-    def __init__(self, path):
-        self.path = path
-        self.cap = cv.VideoCapture(path)
+    def __init__(self, input):
+        self.cap = cv.VideoCapture(input)
         self.frames = []
 
-    def is_opened(self):
+    def is_opened(self) -> bool:
         return self.cap.isOpened()
 
-    def get_frames(self):
+    def get_frames(self) -> list:
         if self.frames == []:
             while self.cap.isOpened():
                 ret, frame = self.cap.read()
@@ -20,10 +19,13 @@ class Video:
                     break
         return self.frames
 
-    def get_height(self):
-        return self.cap.get(cv.CAP_PROP_FRAME_HEIGHT)
+    def get_height(self) -> int:
+        return int(self.cap.get(cv.CAP_PROP_FRAME_HEIGHT))
+
+    def get_width(self) -> int:
+        return int(self.cap.get(cv.CAP_PROP_FRAME_WIDTH))
     
-    def get_fps(self):
+    def get_fps(self) -> float:
         return self.cap.get(cv.CAP_PROP_FPS)
     
     def _move_yo_dy_origin_to_top_left(self, y0, dy):
@@ -32,7 +34,7 @@ class Video:
     def _move_yo_y1_origin_to_top_left(self, y0, y1):
         return self.get_height() - y0, self.get_height() - y1
     
-    def show_with_vectors(self, vectors, lines = [], signs = [], title = "Video"):
+    def copy_with_vectors(self, vectors, lines = [], signs = []) -> list:
         frames_with_vectors = []
         for index, frame in enumerate(self.get_frames()):
             frame_with_vectors = frame.copy()
@@ -57,13 +59,16 @@ class Video:
                     x_sign += 50
 
             frames_with_vectors.append(frame_with_vectors)
-        
-        show_and_control(title, frames_with_vectors)
+
+        return frames_with_vectors
+
+    def play(self, tittle):
+        show_and_control(tittle, self.get_frames())
 
     def close(self):
         self.cap.release()
 
-def _is_valid_vector(x0s, y0s, dxs, dys, index):
+def _is_valid_vector(x0s, y0s, dxs, dys, index) -> bool:
     return index < len(x0s) and not np.isnan(x0s[index]) and not np.isnan(y0s[index]) and not np.isnan(dxs[index]) and not np.isnan(dys[index])
 
 def _draw_vector(frame, x0, y0, dx, dy, tag, color):

@@ -1,20 +1,32 @@
 from tracker import Tracker
 from video import Video
-import pickle as pkl
+from storage import get_input_video, save_keypoints
 
-video_name = "video4"
-tracker = Tracker([6, 8, 10])
-video = Video(f"videos/{video_name}.mp4")
-if not video.is_opened():
-    print("Video not found")
-    exit()
+def process_video(name: str, video: Video, arm: str):
+    relevant_keypoints = [6, 8, 10] if arm == "right" else [5, 7, 9]
+    tracker = Tracker(relevant_keypoints)
 
-positions = []
-for frame in video.get_frames():
-    keypoints = tracker.get_keypoints(frame)
+    keypoints_positions = []
+    for frame in video.get_frames():
+        keypoints = tracker.get_keypoints(frame)
+        if len(keypoints) > 0:
+            keypoints_positions.append(keypoints)
 
-    if len(keypoints) > 0:
-        positions.append(keypoints)
+    save_keypoints(name, keypoints_positions)
 
-with open(f"keypoints/{video_name}", "wb") as f:
-    pkl.dump(positions, f)
+if __name__ == "__main__":
+    import sys
+
+    VIDEO_NOT_FOUND = 1
+
+    VIDEO_NAME = "video2"
+    EXTENSION = "mp4"
+    ARM = "left"
+
+    _video = get_input_video(VIDEO_NAME, EXTENSION)
+    if not _video.is_opened():
+        print("Video not found")
+        sys.exit(VIDEO_NOT_FOUND)
+
+    process_video(VIDEO_NAME, _video, ARM)
+    _video.close()
