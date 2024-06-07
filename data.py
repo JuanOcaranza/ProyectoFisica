@@ -50,7 +50,6 @@ class Data:
         self.df['theta_wrist'] = np.arccos(cosine_angle)
         self.df = ft.apply_filter(self.df, ['theta_wrist'])
 
-
         self.df['distance_elbow_shoulder'] = magnitude_vector_elbow_to_shoulder
         self.df['x_vector_elbow_to_shoulder'] = x_vector_elbow_to_shoulder
         self.df['y_vector_elbow_to_shoulder'] = y_vector_elbow_to_shoulder

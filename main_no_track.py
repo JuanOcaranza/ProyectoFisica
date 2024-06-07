@@ -10,6 +10,11 @@ from energy import Energy
 from storage import get_input_video, get_velocity_and_acceleration_video, get_forces_video
 from storage import get_keypoints, save_velocity_and_acceleration_video, save_forces_video
 from storage import save_data_frame, get_data_frame
+from scipy.optimize import curve_fit
+import numpy as np
+
+def cos(x, a, b, c, d):
+    return a * np.cos(b * (x + c)) + d
 
 JOULES_PER_CALORIE = 4.184
 
@@ -40,6 +45,18 @@ def process_keypoints(name: str, video: Video, distance_elbow_wrist: float,
     energy = Energy(df, mass_weight, mass_forearm)
     work_from_energy = energy.get_work()
     calories_from_energy = work_from_energy / JOULES_PER_CALORIE
+
+    popt, pcov = curve_fit(cos, df['time'], df['theta_wrist'])
+    print(popt)
+    """ a = np.full_like(df['time'], 1.15)
+    b = np.full_like(df['time'], 1.8)
+    c = np.full_like(df['time'], .76)
+    d = np.full_like(df['time'], 1.9) """
+    a = np.full_like(df['time'], popt[0])
+    b = np.full_like(df['time'], popt[1])
+    c = np.full_like(df['time'], popt[2])
+    d = np.full_like(df['time'], popt[3])
+    df['curve_fit_theta_filtered'] = cos(df['time'], a, b, c, d)
 
     save_data_frame(name, df)
 
