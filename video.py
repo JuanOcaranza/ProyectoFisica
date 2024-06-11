@@ -97,15 +97,18 @@ def _draw_sign(frame, x, up, tag, color):
         dy = 70
     _draw_vector(frame, x, y, 0, dy, tag, color)
 
-def _wait_user():
-    wait_frame = np.zeros((100, 400, 3), np.uint8)
-    cv.putText(wait_frame, "Press any key to continue", (10, 50),
-               cv.FONT_HERSHEY_SIMPLEX, 0.9, (255, 255, 255), 2)
-    cv.imshow("Wait", wait_frame)
+def show_message(title: str, message: str):
+    message_frame = np.zeros((100, 400, 3), np.uint8)
+    cv.putText(message_frame, message, (10, 50), cv.FONT_HERSHEY_SIMPLEX, 0.9, (255, 255, 255), 2)
+    cv.imshow(title, message_frame)
     cv.waitKey(0)
-    cv.destroyWindow("Wait")
+    cv.destroyWindow(title)
 
 def show_and_control(title, frames):
+    if len(frames) == 0:
+        show_message(title, "Video is empty")
+        return
+        
     index = -1
     key = -1
     isPaused = False

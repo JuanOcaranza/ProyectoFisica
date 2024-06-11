@@ -20,12 +20,13 @@ if not video.is_opened():
     print("Video not found")
     sys.exit(VIDEO_NOT_FOUND)
 
+process_video(VIDEO_NAME, video, ARM)
+
 keypoints = get_keypoints(VIDEO_NAME)
 if keypoints is None:
     print("Keypoints not found")
     sys.exit(KEYPOINTS_NOT_FOUND)
 
-process_video(VIDEO_NAME, video, ARM)
 calories, calories_from_energy = process_keypoints(
     VIDEO_NAME, video, DISTANCE_ELBOW_WRIST, MASS_WEIGHT, MASS_FOREARM, RADIUS_BICEP, keypoints)
 video.close()
