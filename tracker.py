@@ -3,6 +3,7 @@ import numpy as np
 import cv2 as cv
 import torch
 from video import Video
+from storage import get_input_video
 
 """
 Single object tracker, able to detect people keypoints and track them.
@@ -72,7 +73,7 @@ class Tracker:
 
 if __name__ == "__main__":
     tracker = Tracker([6, 8, 10])
-    video = Video("videos/video3.mp4")
+    video = get_input_video("video2", "mp4")
 
     for frame in video.get_frames():
         result = tracker._track(frame)
