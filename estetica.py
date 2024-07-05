@@ -28,16 +28,16 @@ def estetica(figura,x_name = '',y_name = '',title = '',w = 900,h = 450):
         font = dict(size=20)
     )
 
-def show_with_estetica(x_data, y_data, x_name = '', y_name = '', title = '', w = 1100, h = 450):
+def show_with_estetica(x_data, y_data, x_name = '', y_name = '', title = '', w = 900, h = 450):
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=x_data, y=y_data, mode='lines', line=dict(width=5)))
+    fig.add_trace(go.Scatter(x=x_data, y=y_data, mode='lines', line=dict(width=3)))
     estetica(fig, x_name, y_name, title, w, h)
     fig.show()
 
-def show_multiple_with_estetica(x_data, y_named_datas, x_name = '', y_name = '', title = '', w = 1200, h = 600):
+def show_multiple_with_estetica(x_data, y_named_datas, x_name = '', y_name = '', title = '', w = 900, h = 600):
     fig = go.Figure()
     for y_named_data in y_named_datas:
         y_data, y_data_name = y_named_data
-        fig.add_trace(go.Scatter(x=x_data, y=y_data, mode='lines', name = y_data_name, line=dict(width=5)))
+        fig.add_trace(go.Scatter(x=x_data, y=y_data, mode='lines', name = y_data_name, line=dict(width=3)))
     estetica(fig, x_name, y_name, title, w, h)
     fig.show()
